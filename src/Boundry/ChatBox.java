@@ -1,7 +1,6 @@
-package View;
+package Boundry;
 
 import Controller.Controller;
-import Model.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +31,9 @@ public class ChatBox implements ActionListener {
         frame.add(south, BorderLayout.SOUTH);
         frame.add(west, BorderLayout.WEST);
         frame.add(east,BorderLayout.EAST);
+        east.setBackground(Color.yellow); // ta bort sen
+        west.setBackground(Color.blue);   // ta bort sen
+        south.setBackground(Color.black); //ta bort sen
         frame.setVisible(true);
     }
     public void setMessageBox(String message){

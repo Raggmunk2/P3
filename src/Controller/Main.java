@@ -1,21 +1,27 @@
 package Controller;
 
-import Model.*;
-import View.LogInWindow;
+import Boundry.ChatBox;
+import Entity.*;
+import Boundry.LogInWindow;
 
 import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) {
         Buffer<Message> messageBuffer = new Buffer<Message>();
-        Buffer<MessageProducer> producerBuffer	= new Buffer<MessageProducer>();
-        MessageProducerInput ipManager = new MessageProducerInput(producerBuffer);
-        ipManager.addMessageProducer(new ReadFromFile("files/Hej.txt"));
-        Socket socket = new Socket();
-        //int port = socket.getLocalPort();
-        //System.out.println(port);
+        MessageManager messageManager = new MessageManager(messageBuffer);
+        //Server server = new Server(messageManager,2341);
+        //ChatBox chatBox = new ChatBox();
+        Controller controller = new Controller();
         new LogInWindow();
-        new Server(ipManager,2341);
-        new Client("127.0.0.1",2341);
+
+        //Buffer<MessageProducer> producerBuffer	= new Buffer<MessageProducer>();
+        //MessageProducerInput ipManager = new MessageProducerInput(producerBuffer);
+
+        //ipManager.addMessageProducer(new ReadFromFile("files/Hej.txt"));
+        Socket socket = new Socket();
+
+
+        //new Client("127.0.0.1",2341);
     }
 }

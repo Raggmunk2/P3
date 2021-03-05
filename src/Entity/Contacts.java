@@ -1,6 +1,4 @@
-package Model;
-
-import java.util.HashMap;
+package Entity;
 
 public class Contacts {
     //private HashMap<User,Client> clients = ...

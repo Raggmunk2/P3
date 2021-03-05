@@ -1,4 +1,4 @@
-package Model;
+package Entity;
 
 import javax.swing.*;
 import java.io.Serializable;

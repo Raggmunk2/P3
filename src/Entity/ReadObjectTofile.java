@@ -1,4 +1,4 @@
-package Model;
+package Entity;
 
 public class ReadObjectTofile implements MessageProducer{
     private String filename;

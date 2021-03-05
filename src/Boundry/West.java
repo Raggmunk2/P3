@@ -1,4 +1,4 @@
-package View;
+package Boundry;
 
 import Controller.Controller;
 

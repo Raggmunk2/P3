@@ -1,7 +1,8 @@
-package View;
+package Boundry;
 
 import Controller.Controller;
-import Model.Message;
+import Entity.Buffer;
+import Entity.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,32 +13,36 @@ public class South extends JPanel implements ActionListener {
     private JTextField messageToWrite;
     private JButton sendButton;
     private Controller controller;
+    private Buffer<Message> messageBuffer;
     public South(Controller controller){
         this.controller=controller;
         setUp();
 
     }
     public void setUp(){
+        setSize(new Dimension(100,500));
         messageToWrite = new JTextField();
-        messageToWrite.setPreferredSize(new Dimension(415,100)); //415, 100
+        //messageToWrite.setBounds(25,50,100,600);
+        messageToWrite.setPreferredSize(new Dimension(300,20)); //415, 100
         messageToWrite.setBackground(Color.gray);
-        /*JScrollPane scrollPane = new JScrollPane(messageToWrite);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(415,100));
-        this.add(scrollPane);*/
+
 
         sendButton = new JButton("Send");
-        sendButton.setBounds(25,25,10,60);
+        //sendButton.setBounds(25,25,10,60);
         sendButton.addActionListener(this);
-        this.add(sendButton);
 
-        this.add(messageToWrite);
+        add(sendButton,BorderLayout.EAST);
+
+        add(messageToWrite, BorderLayout.WEST);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        controller.getClient();
+        messageToWrite.getText();
+        //Message message = new Message();
+        //messageBuffer.put(message);
     }
 
     public String getText() {
