@@ -1,6 +1,8 @@
 package Boundry;
 
 import Controller.Controller;
+import Entity.Callback;
+import Entity.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,17 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class ChatBox implements ActionListener {
+public class ChatBox{
     private JFrame frame;
     private West west;
     private East east;
     private South south;
     private Controller controller;
 
-    public ChatBox(){
+    public ChatBox(Controller controller){
+        this.controller=controller;
         setUpFrame();
-
-
     }
 
     private void setUpFrame() {
@@ -36,26 +37,17 @@ public class ChatBox implements ActionListener {
         south.setBackground(Color.black); //ta bort sen
         frame.setVisible(true);
     }
-    public void setMessageBox(String message){
+
+    public void updateListView(String[] infoStrings) {
+        west.updateListView(infoStrings);
+    }
+    /*public void setMessageBox(Message message){
         try{
-            controller.getMessage();
+            message = controller.getMessage();
+            west.showMessage(message);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public static void main(String[] args) {
-        new ChatBox();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-       String message =  south.getText();
-        setMessageBox(message);
-        //skicka meddelandet
-
-    }
-    public void getText(){
-
-    }
 }

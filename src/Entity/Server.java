@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Server implements Runnable{
     private Thread server = new Thread(this);
@@ -15,6 +16,8 @@ public class Server implements Runnable{
     private MessageManager messageManager;
     private int port;
     private DateTimeFormatter dtf;
+    private Client client;
+    private ArrayList<User> users = new ArrayList<>();
 
     public Server(MessageManager messageManager, int port){
         this.messageManager=messageManager;
@@ -29,8 +32,14 @@ public class Server implements Runnable{
             try(ServerSocket serverSocket = new ServerSocket(port)){
                 System.out.println("Servers startar");
                 socket = serverSocket.accept();
-                new Connection(socket);
-            } catch (IOException e) {
+                System.out.println("har conn");
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                Message newUser = (Message)ois.readObject();
+                users.add(newUser.getSender());
+                System.out.println("user added");
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                new Connection(ois,oos);
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
@@ -44,42 +53,40 @@ public class Server implements Runnable{
         private Receiver receiver;
         private Socket socket;
 
-        public Connection(Socket socket){
+        public Connection(ObjectInputStream ois, ObjectOutputStream oos){
             this.socket=socket;
             messageBuffer = new Buffer<>();
-            try{
-                sender = new Sender(socket.getOutputStream(),messageBuffer);
-                receiver = new Receiver(socket.getInputStream(),messageBuffer);
-                sender.start();
-                receiver.start();
-            }catch (IOException e){}
+            sender = new Sender(oos,messageBuffer);
+            receiver = new Receiver(ois,messageBuffer);
+            sender.start();
+            receiver.start();
         }//konstruktor
     }//conn
+
     private class Sender extends Thread implements PropertyChangeListener {
         private ObjectOutputStream oos;
         private Buffer<Message> messageBuffer;
-        public Sender(OutputStream outputStream,Buffer<Message> messageBuffer){
-            try {
-                oos = new ObjectOutputStream(outputStream);
-                this.messageBuffer=messageBuffer;
-                messageManager.addPropertyChangeListener(this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        public Sender(ObjectOutputStream oos,Buffer<Message> messageBuffer){
+            this.oos = oos;
+            this.messageBuffer=messageBuffer;
+            messageManager.addPropertyChangeListener(this);
 
         }//konstruktor
+
         public void run(){
-            while(true){
                 try{
-                    Message message = messageBuffer.get();
-                    oos.writeObject(message);
-                    oos.flush();
+                    while(true) {
+                        System.out.println("Är du ens här!");
+                        Message message = messageBuffer.get();
+                        oos.writeObject(message);
+                        System.out.println("hej");
+                        oos.flush();
+                    }
                 } catch (InterruptedException | IOException e) {
                     e.printStackTrace();
                 }
-            }//while
         }//run
-
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -89,23 +96,28 @@ public class Server implements Runnable{
             }
         }
     }//sender
+
     private class Receiver extends Thread{
         private ObjectInputStream ois;
         private Buffer<Message> messageBuffer;
 
-        public Receiver(InputStream inputStream, Buffer<Message> messageBuffer) {
-           try{
-               ois = new ObjectInputStream(inputStream);
-               this.messageBuffer = messageBuffer;
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
+        public Receiver(ObjectInputStream ois, Buffer<Message> messageBuffer) {
+            this.ois = ois;
+            this.messageBuffer = messageBuffer;
         }
 
-        public void run(){ //lagt in tid för när meddelandet tog emot
+        public void run(){
             while (true){
                 try {
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+                    System.out.println("waiting for messages");
+                    Message message = (Message) ois.readObject();
+                    System.out.println("message received");
+                    if (message != null) {
+                        messageManager.put(message);
+                    } else {
+                        System.out.println("NULL");
+                    }
+                   /* DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
                     LocalDateTime now = LocalDateTime.now();
                     String textMessage = ois.readUTF();
                     textMessage += ois.readUTF();
@@ -113,17 +125,11 @@ public class Server implements Runnable{
                     Message message = new Message(textMessage, null);
                     if(message != null){
                         messageManager.put(message);
-                    }
-                } catch (IOException e) {
+                    }*/
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }//while
         }//run
     }//receiver
-    public static void main(String[] args) {
-        Buffer<Message> buffer = new Buffer<>();
-        MessageManager messageManager = new MessageManager(buffer);
-        Server server = new Server(messageManager, 2341);
-        messageManager.start();
-    }
 }//server

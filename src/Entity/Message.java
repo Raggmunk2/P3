@@ -4,36 +4,54 @@ import javax.swing.*;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private String username;
+    private User sender;
+    private User[] recipients;
     private Icon profilePic;
-    private Message message;
-    private String line;
+    private String messageText;
 
-    public Message(String username, Icon profilePic){
-        this.username =username;
+    public Message(User sender, User[] recipients, String messageText,Icon profilePic){
+        this.sender=sender;
+        this.recipients=recipients;
+        this.messageText=messageText;
         this.profilePic =profilePic;
     }
 
-    public Message(String line) {
-        this.line=line;
+    public User getSender() {
+        return sender;
     }
 
-    public Message(Message message) {
-        this.message=message;
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 
-    public void Message(String username, Icon profilePic){
-        this.username =username;
-        this.profilePic =profilePic;
-
+    public User[] getRecipients() {
+        return recipients;
     }
 
-    public String getUsername() {
-        return username;
+    public void setRecipients(User[] recipients) {
+        this.recipients = recipients;
     }
 
     public Icon getProfilePic() {
         return profilePic;
+    }
+
+    public void setProfilePic(Icon profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public String getMessageText() {
+        return messageText;
+    }
+
+    public void setMessageText(String messageText) {
+        this.messageText = messageText;
+    }
+    public void setUsername(String username){
+        sender.setUsername(username);
+    }
+    public String toString(){
+        return String.format("%s: %s",sender.getUsername(), messageText);
     }
 }
 

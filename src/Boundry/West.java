@@ -1,11 +1,13 @@
 package Boundry;
 
 import Controller.Controller;
+import Entity.Callback;
+import Entity.Message;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class West extends JPanel {
+public class West extends JPanel{
     private Controller controller;
     private JLabel label;
     private JList messageBox;
@@ -30,7 +32,7 @@ public class West extends JPanel {
         this.add(scrollPane);
     }
 
-    public void showMessage() {
-        //messageBox.setListData(listMessage);
+    public void updateListView(String[] infoStrings) {
+        messageBox.setListData(infoStrings);
     }
 }
