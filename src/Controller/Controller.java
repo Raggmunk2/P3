@@ -2,11 +2,9 @@ package Controller;
 
 import Boundry.*;
 import Entity.*;
-
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Controller implements Callback{
     private ChatBox chatBox;
@@ -22,7 +20,7 @@ public class Controller implements Callback{
     private Client client;
 
     public Controller(Buffer<Message> messageBuffer,MessageManager messageManager){
-        this.logInWindow=logInWindow;
+        //this.logInWindow=logInWindow;
         this.messageBuffer=messageBuffer;
         this.messageManager=messageManager;
         this.client=new Client();
@@ -39,7 +37,7 @@ public class Controller implements Callback{
     }
 
     public Message getMessage() throws InterruptedException {
-        Message message = (Message) messageBuffer.get();
+        Message message = messageBuffer.get();
         return message;
     }
 
@@ -75,6 +73,7 @@ public class Controller implements Callback{
     }
 
     public void addNewUser(String username, ImageIcon imageIcon) {
+        user = new User(username,imageIcon);
         user.addUser(username,imageIcon);
 
     }
@@ -104,11 +103,6 @@ public class Controller implements Callback{
     }
 
     public void sendToServer(String messageText) {
-        /*String username = user.getUsername();
-        Icon profilePic = user.getImage();
-        User sender = user.getUser();
-        User[] recipient = user.getUserList();
-        Message message = new Message(sender,null,messageText, profilePic);*/
         client.sendToServer(messageText);
     }
 
@@ -123,14 +117,19 @@ public class Controller implements Callback{
     }
 
     public void connect(String username, ImageIcon imageIcon, String ip, int port) {
+        chatBox = new ChatBox(this);
         User user1 = new User(username,imageIcon);
         client.setUser(user1);
         client.connect(ip,port);
-        chatBox = new ChatBox(this);
     }
 
     @Override
     public void updateListView(Message[] messages) {
         chatBox.updateListView(messages);
+    }
+
+    @Override
+    public void updateListView(User[] users) {
+        chatBox.showUserOnline(users);
     }
 }

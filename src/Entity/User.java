@@ -14,12 +14,8 @@ public class User implements Serializable { // Även användas i strömmar
     public User(String username, ImageIcon image){
         this.username=username;
         this.image=image;
-        readUserFromFile();
     }
 
-    public User(String username) {
-        this.username=username;
-    }
 
     public int hashCode() {
         return username.hashCode();
@@ -68,7 +64,7 @@ public class User implements Serializable { // Även användas i strömmar
     public String getContactList() {
         String contactInfo = null;
         for(User c : contacts){
-            contactInfo += contacts.toString();
+            contactInfo += contacts.toString() + "\n";
         }
         return contactInfo;
     }

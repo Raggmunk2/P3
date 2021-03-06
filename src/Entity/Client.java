@@ -2,8 +2,7 @@ package Entity;
 
 import Controller.Controller;
 
-import javax.swing.*;
-import java.beans.PropertyChangeListener;
+
 import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.net.Socket;
@@ -11,7 +10,7 @@ import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 
 public class Client {
@@ -55,7 +54,7 @@ public class Client {
                 Socket socket = new Socket(ip, port);
                 System.out.println("Connected");
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                Message userMessage = new Message(user1,null,null,null);
+                Message userMessage = new Message(user1,null,null,user1.getImage());
                 System.out.println("Sending user");
                 oos.writeObject(userMessage);
                 oos.flush();
@@ -107,36 +106,37 @@ public class Client {
                     Message message;
                     while (!Thread.interrupted()) {
                         //lagt till tid då meddelandet skickades
-                        /*DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-                        LocalDateTime now = LocalDateTime.now();
-                        String textMessage = ois.readUTF();
-                        textMessage += dtf.format(now);
-                        textMessage += ois.readUTF();
-                        message = new Message(textMessage, null);*/
-                        //String username = ois.readUTF();
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+                        LocalDateTime timeSent = LocalDateTime.now();
                         message = (Message) ois.readObject();
-                        if (message != null) {
-                            //changeSupport.firePropertyChange("New message", null, message);
-                        }
-                        //username = controller.getUsernameText();
                         if (message.getSender().getUsername().equals(user1.getUsername())) {
                             message.setUsername("You");
                         }
-                        messageRegistrator.add(message);
-                        for (Callback callback : callbacks) {
-                            Message[] messages = new Message[messageRegistrator.size()];
-                            for (int i = 0; i < messages.length; i++) {
-                                messages[i] = messageRegistrator.get(i);
+                        if (message.getSender().getUsername().equals("SERVER")) {
+                            handleServerMessage(message);
+                        }
+                        else {
+                            messageRegistrator.add(message);
+                            for (Callback callback : callbacks) {
+                                Message[] messages = new Message[messageRegistrator.size()];
+                                for (int i = 0; i < messages.length; i++) {
+                                    messages[i] = messageRegistrator.get(i);
+                                }
+                                callback.updateListView(messages);
                             }
-                            callback.updateListView(messages);
                         }
                     }
-
-
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                    e.printStackTrace(); }
             } //while
             }//run
-        }//receiver
+
+        private void handleServerMessage(Message message) {
+            if(message.getMessageText().equals("updateOnline")){
+                for(Callback c : callbacks){
+                    c.updateListView(message.getRecipients());
+                }
+            }
+        }
+    }//receiver
 }//client

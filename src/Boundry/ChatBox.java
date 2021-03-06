@@ -3,6 +3,7 @@ package Boundry;
 import Controller.Controller;
 import Entity.Callback;
 import Entity.Message;
+import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,13 +42,8 @@ public class ChatBox{
     public void updateListView(Message[] messages) {
         west.updateListView(messages);
     }
-    /*public void setMessageBox(Message message){
-        try{
-            message = controller.getMessage();
-            west.showMessage(message);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }*/
 
+    public void showUserOnline(User[] users) {
+        east.showUserOnline(users);
+    }
 }

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 
 public class Server implements Runnable{
     private Thread server = new Thread(this);
-    private MessageProducerInput mpInput;
     private MessageManager messageManager;
     private int port;
     private DateTimeFormatter dtf;
@@ -39,12 +38,22 @@ public class Server implements Runnable{
                 System.out.println("user added");
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 new Connection(ois,oos);
+                sendUsers(users);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
 
         }
+    }
+
+    private void sendUsers(ArrayList<User> users) {
+        User[] onlineUsers = new User[users.size()];
+        for(int i =0;i< onlineUsers.length;i++){
+            onlineUsers[i] = users.get(i);
+        }
+        Message updateOnline = new Message(new User("SERVER",null),onlineUsers,"updateOnline",null);
+        messageManager.put(updateOnline);
     }
 
     private class Connection{
