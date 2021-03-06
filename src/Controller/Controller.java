@@ -6,6 +6,7 @@ import Entity.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controller implements Callback{
     private ChatBox chatBox;
@@ -74,23 +75,7 @@ public class Controller implements Callback{
     }
 
     public void addNewUser(String username, ImageIcon imageIcon) {
-        ArrayList<User> users = new ArrayList<>();
-        users.add( new User(username,imageIcon));
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("files/Users.txt"),"UTF-8"));
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("files/Users.txt"),"UTF-8"));
-            String str = br.readLine();
-            while(str != null){
-                bw.write(username);
-                bw.write(imageIcon.toString());
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        user.addUser(username,imageIcon);
 
     }
 
@@ -100,7 +85,8 @@ public class Controller implements Callback{
             messageArray = new ArrayList<>();
             String exictingUsername;
             String image;
-            while (br.ready()){
+            String str = br.readLine();
+            while (str != null){
                 exictingUsername = br.readLine();
                 image = br.readLine();
                 if(username.contains(exictingUsername)){
@@ -109,6 +95,7 @@ public class Controller implements Callback{
                 else{
                     logInWindow.sucess("You are sucessfully added to the chatbox");
                 }
+                br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,15 +122,15 @@ public class Controller implements Callback{
         return messageText;
     }
 
-    public void connect(String username, String ip, int port) {
-        User user1 = new User(username);
+    public void connect(String username, ImageIcon imageIcon, String ip, int port) {
+        User user1 = new User(username,imageIcon);
         client.setUser(user1);
         client.connect(ip,port);
         chatBox = new ChatBox(this);
     }
 
     @Override
-    public void updateListView(String[] infoStrings) {
-        chatBox.updateListView(infoStrings);
+    public void updateListView(Message[] messages) {
+        chatBox.updateListView(messages);
     }
 }

@@ -31,7 +31,7 @@ public class Client {
 
 
     public void sendToServer(String messageText) {
-        Message message = new Message(user1,null,messageText,null);
+        Message message = new Message(user1,null,messageText,user1.getImage());
         messageBuffer.put(message);
     }
 
@@ -124,11 +124,11 @@ public class Client {
                         }
                         messageRegistrator.add(message);
                         for (Callback callback : callbacks) {
-                            String[] infoStrings = new String[messageRegistrator.size()];
-                            for (int i = 0; i < infoStrings.length; i++) {
-                                infoStrings[i] = messageRegistrator.get(i).toString();
+                            Message[] messages = new Message[messageRegistrator.size()];
+                            for (int i = 0; i < messages.length; i++) {
+                                messages[i] = messageRegistrator.get(i);
                             }
-                            callback.updateListView(infoStrings);
+                            callback.updateListView(messages);
                         }
                     }
 

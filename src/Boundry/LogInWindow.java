@@ -4,9 +4,11 @@ package Boundry;
 
 import Controller.Controller;
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.File;
 
 
 public class LogInWindow implements ActionListener {
@@ -17,9 +19,11 @@ public class LogInWindow implements ActionListener {
     private JTextField portText;
     private JLabel userLabel;
     private JLabel serverLabel;
-    private JButton connectButton;
-    private JButton newUser;
+    private JButton logInButton;
+    private JButton selectImage;
     private Controller controller;
+    private File selectedFile;
+    private ImageIcon imageIcon;
 
 
     public LogInWindow(Controller controller) {
@@ -58,33 +62,56 @@ public class LogInWindow implements ActionListener {
         portText.setBounds(205, 60, 60, 25);
         panel.add(portText);
 
-        connectButton = new JButton("Login");
-        connectButton.setBounds(50,100,100,25);
-        connectButton.addActionListener(this);
-        panel.add(connectButton);
+        logInButton = new JButton("Login");
+        logInButton.setBounds(40,100,100,25);
+        logInButton.addActionListener(this);
+        panel.add(logInButton);
 
-        newUser = new JButton("New User");
-        newUser.setBounds(180,100,100,25);
-        newUser.addActionListener(this);
-        panel.add(newUser);
-
+        selectImage = new JButton("Select image");
+        selectImage.setBounds(160,100,110,25);
+        selectImage.addActionListener(this);
+        panel.add(selectImage);
 
         frame.setVisible(true);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==newUser){
-            new NewUserWindow();
+        if(e.getSource()==selectImage){
+            System.out.println("Select image");
+            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+            int returnValue = jfc.showOpenDialog(null);
+
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                selectedFile = jfc.getSelectedFile();
+                boolean fileCheck = controller.checkFileType(selectedFile);
+                if(fileCheck){
+                    imageIcon = new ImageIcon(String.valueOf(selectedFile));
+                    Image image = imageIcon.getImage();
+                    Image newImage = image.getScaledInstance(25,25, Image.SCALE_SMOOTH);
+                    imageIcon = new ImageIcon(newImage);
+                    String username = userText.getText();
+                    controller.addNewUser(username, imageIcon);
+                }else {
+                    JOptionPane.showInternalMessageDialog(null,"You chose the wrong format!");
+
+                }
+            }
         }
-        if(e.getSource()== connectButton){
-            String user = userText.getText();
-            String ip = ipText.getText();
-            int port = Integer.parseInt(portText.getText());
-            System.out.println(String.format("User: %s, ip: %s, port: %s", user, ip, port));
-            controller.connect(user, ip, port);
-            frame.setVisible(false);
+        if(e.getSource()== logInButton){
+            if(selectedFile == null) {
+                sendError("You have to chose a profile picture!");
+            }
+            else {
+                String user = userText.getText();
+                String ip = ipText.getText();
+                int port = Integer.parseInt(portText.getText());
+                System.out.println(String.format("User: %s, ip: %s, port: %s", user, ip, port));
+                controller.connect(user,imageIcon ,ip, port);
+                controller.addNewUser(user,imageIcon);
+                frame.setVisible(false);
+            }
         }
     }
 

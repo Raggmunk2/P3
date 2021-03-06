@@ -1,7 +1,6 @@
 package Boundry;
 
 import Controller.Controller;
-import Entity.Callback;
 import Entity.Message;
 
 import javax.swing.*;
@@ -24,6 +23,7 @@ public class West extends JPanel{
         messageBox.setPreferredSize(new Dimension(400,425));// här visas alla meddelanden
         messageBox.setBackground(Color.LIGHT_GRAY);
         this.add(messageBox);
+        messageBox.setCellRenderer(new MessageRenderer());
 
         label = new JLabel();
         JScrollPane scrollPane = new JScrollPane(messageBox);
@@ -32,7 +32,7 @@ public class West extends JPanel{
         this.add(scrollPane);
     }
 
-    public void updateListView(String[] infoStrings) {
-        messageBox.setListData(infoStrings);
+    public void updateListView(Message[] messages) {
+        messageBox.setListData(messages);
     }
 }

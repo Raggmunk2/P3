@@ -83,6 +83,9 @@ public class NewUserWindow implements ActionListener {
                 boolean fileCheck = controller.checkFileType(selectedFile);
                 if(fileCheck){
                     ImageIcon imageIcon = new ImageIcon(String.valueOf(selectedFile));
+                    Image image = imageIcon.getImage();
+                    Image newImage = image.getScaledInstance(25,25, Image.SCALE_SMOOTH);
+                    imageIcon = new ImageIcon(newImage);
                     String username = newUserText.getText();
                     controller.addNewUser(username, imageIcon);
                 }else {

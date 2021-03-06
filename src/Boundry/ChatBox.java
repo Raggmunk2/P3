@@ -38,8 +38,8 @@ public class ChatBox{
         frame.setVisible(true);
     }
 
-    public void updateListView(String[] infoStrings) {
-        west.updateListView(infoStrings);
+    public void updateListView(Message[] messages) {
+        west.updateListView(messages);
     }
     /*public void setMessageBox(Message message){
         try{

@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class User implements Serializable { // Även användas i strömmar
     private String username;
     private ImageIcon image;
-    private HashMap<String,String> users = new HashMap<String,String>();
+    private HashMap<String,ImageIcon> users = new HashMap<String,ImageIcon>();
     private ArrayList<User> contacts = new ArrayList<>();
 
     public User(String username, ImageIcon image){
@@ -56,16 +56,43 @@ public class User implements Serializable { // Även användas i strömmar
             while (br.ready()){
                 username = br.readLine();
                 String image = br.readLine();
-                //ImageIcon imageIcon = new ImageIcon(String.valueOf(image));
+                ImageIcon imageIcon = new ImageIcon(String.valueOf(image));
                 System.out.println(username + "\n" + image);
-                users.put(username, image);
+                users.put(username, imageIcon);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public User[] getUserList() {
-        return null;
+    public String getContactList() {
+        String contactInfo = null;
+        for(User c : contacts){
+            contactInfo += contacts.toString();
+        }
+        return contactInfo;
     }
+
+    public void addUser(String username, ImageIcon imageIcon) {
+        users.put(username,imageIcon);
+    }
+    public void addContactToFile(User newContact){
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("files/Users.txt"), "UTF-8"));
+            String str = br.readLine();
+            while(str != null){
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("files/Contacts.txt"),"UTF-8"));
+                bw.write(String.valueOf(newContact));
+                contacts.add(newContact);
+                br.readLine();
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
