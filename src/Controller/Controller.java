@@ -19,6 +19,7 @@ public class Controller implements Callback{
     private ArrayList<Message> messageArray;
     private User user;
     private Client client;
+    private TraficLog traficLog;
 
     public Controller(Buffer<Message> messageBuffer,MessageManager messageManager){
         this.messageBuffer=messageBuffer;
@@ -149,6 +150,8 @@ public class Controller implements Callback{
     public void logOut() {
         //spara all trafik
         //system exit
-        //Upp med en frame med trafik
+        traficLog = new TraficLog();
+        String[] infoString;//vart hämtar jag infon?!
+        //traficLog.showTraficLog(infoString);
     }
 }
