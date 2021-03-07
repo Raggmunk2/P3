@@ -1,8 +1,6 @@
 package Boundry;
 
 import Controller.Controller;
-import Entity.Buffer;
-import Entity.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +12,7 @@ public class South extends JPanel implements ActionListener {
     private JButton sendButton;
     private Controller controller;
     private JButton addContacts;
-    private JButton showContacts;
+    private JButton logOut;
 
     public South(Controller controller){
         this.controller=controller;
@@ -36,11 +34,11 @@ public class South extends JPanel implements ActionListener {
         addContacts.setBounds(15,15,100,20);
         addContacts.addActionListener(this);
 
-        showContacts = new JButton("Show contacts");
-        showContacts.setBounds(20,20,100,20);
-        showContacts.addActionListener(this);
+        logOut = new JButton("Log out");
+        logOut.setBounds(20,20,100,20);
+        logOut.addActionListener(this);
 
-        add(showContacts);
+        add(logOut);
         add(addContacts);
         add(sendButton);
 
@@ -59,8 +57,8 @@ public class South extends JPanel implements ActionListener {
         if(e.getSource()==addContacts){
             controller.addToContact();
         }
-        if(e.getSource()==showContacts){
-            controller.showContacts();
+        if(e.getSource()== logOut){
+            controller.logOut();
         }
     }
 

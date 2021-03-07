@@ -136,6 +136,7 @@ public class Controller implements Callback{
     public void addToContact() {
         User user = (User) chatBox.getSelectedUser();
         User[] contacts = chatBox.getContacts();
+        System.out.println(contacts.length);
         User[] newContacts = new User[contacts.length + 1];
 
         for(int i=0;i<contacts.length;i++){
@@ -145,6 +146,9 @@ public class Controller implements Callback{
         chatBox.addContactToList(newContacts);
     }
 
-    public void showContacts() {
+    public void logOut() {
+        //spara all trafik
+        //system exit
+        //Upp med en frame med trafik
     }
 }

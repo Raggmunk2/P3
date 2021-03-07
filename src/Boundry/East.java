@@ -10,7 +10,6 @@ public class East extends JPanel {
     private Controller controller;
     private JList onlineList;
     private JLabel onlineText;
-    private User[] contacts = new User[0];
 
     public East(Controller controller) {
         this.controller=controller;
@@ -20,7 +19,6 @@ public class East extends JPanel {
 
     private void setUp() {
         onlineList = new JList();
-        //onlineList.setBounds(10,10,250,220);
         onlineList.setPreferredSize(new Dimension(250,425));// här visas alla som är online
         onlineList.setBackground(Color.LIGHT_GRAY);
         onlineList.setCellRenderer(new UserRenderer());
@@ -30,7 +28,7 @@ public class East extends JPanel {
 
         onlineText = new JLabel("Online now:");
         //Font font = new Font("Arial",Font.PLAIN,12);
-        onlineText.setBounds(0,0,100,20);
+        onlineText.setBounds(5,5,100,20);
         //onlineText.setFont(font);
         //this.add(onlineText);
         this.add(onlineList);
@@ -38,7 +36,6 @@ public class East extends JPanel {
 
     public void showUserOnline(User[] usersOnline) {
         onlineList.setListData(usersOnline);
-        contacts = usersOnline;
     }
 
     public User getSelectedUser() {
@@ -48,7 +45,4 @@ public class East extends JPanel {
        return user;
     }
 
-    public User[] getListElements() {
-        return contacts;
-    }
 }

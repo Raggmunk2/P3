@@ -36,10 +36,6 @@ public class ChatBox{
         frame.add(west, BorderLayout.WEST);
         frame.add(east,BorderLayout.EAST);
         frame.add(middle);
-        east.setBackground(Color.yellow); // ta bort sen
-        west.setBackground(Color.blue);   // ta bort sen
-        south.setBackground(Color.black); //ta bort sen
-        middle.setBackground(Color.orange); //ta bort sen
         frame.setVisible(true);
     }
 
@@ -61,7 +57,7 @@ public class ChatBox{
     }
 
     public User[] getContacts() {
-        User[] contacts = east.getListElements();
+        User[] contacts = middle.getListElements();
         return contacts;
     }
 }

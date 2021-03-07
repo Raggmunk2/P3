@@ -10,6 +10,7 @@ public class Middle extends JPanel {
     private Controller controller;
     private JList contacts;
     private JLabel contactsText;
+    private User[] contactsList = new User[0];
 
     public Middle(Controller controller) {
         this.controller=controller;
@@ -18,9 +19,9 @@ public class Middle extends JPanel {
 
     private void setUp() {
         contacts = new JList();
-        //contacts.setBounds(10,10,200,200);
         contacts.setPreferredSize(new Dimension(200,400));
-        contacts.setBackground(Color.gray);
+        contacts.setBackground(Color.lightGray);
+        contacts.setCellRenderer(new UserRenderer());
 
 
         contactsText = new JLabel("Your contacts");
@@ -32,5 +33,9 @@ public class Middle extends JPanel {
 
     public void addContactToList(User[] newContacts) {
         contacts.setListData(newContacts);
+        contactsList= newContacts;
+    }
+    public User[] getListElements() {
+        return contactsList;
     }
 }
