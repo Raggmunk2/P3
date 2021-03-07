@@ -85,7 +85,8 @@ public class Client {
                     oos.writeObject(message);
                     oos.flush();
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    break;
                 }
 
             }
@@ -127,7 +128,9 @@ public class Client {
                         }
                     }
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace(); }
+                    //e.printStackTrace();
+                    break;
+                }
             } //while
             }//run
 

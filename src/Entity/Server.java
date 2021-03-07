@@ -84,17 +84,20 @@ public class Server implements Runnable{
         }//konstruktor
 
         public void run(){
-                try{
-                    while(true) {
-                        System.out.println("Är du ens här!");
-                        Message message = messageBuffer.get();
-                        oos.writeObject(message);
-                        System.out.println("hej");
-                        oos.flush();
-                    }
+            while(true) {
+                try {
+
+                    System.out.println("Är du ens här!");
+                    Message message = messageBuffer.get();
+                    oos.writeObject(message);
+                    System.out.println("hej");
+                    oos.flush();
+
                 } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    break;
                 }
+            }
         }//run
 
         @Override
@@ -136,7 +139,8 @@ public class Server implements Runnable{
                         messageManager.put(message);
                     }*/
                 } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    break;
                 }
             }//while
         }//run

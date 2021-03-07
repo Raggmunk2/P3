@@ -16,6 +16,7 @@ public class ChatBox{
     private West west;
     private East east;
     private South south;
+    private Middle middle;
     private Controller controller;
 
     public ChatBox(Controller controller){
@@ -27,15 +28,18 @@ public class ChatBox{
         this.south=new South(controller);
         this.west= new West(controller);
         this.east=new East(controller);
+        this.middle= new Middle(controller);
         frame = new JFrame("ChatBox");
-        frame.setSize(800,600);
+        frame.setSize(1000,600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(south, BorderLayout.SOUTH);
         frame.add(west, BorderLayout.WEST);
         frame.add(east,BorderLayout.EAST);
+        frame.add(middle);
         east.setBackground(Color.yellow); // ta bort sen
         west.setBackground(Color.blue);   // ta bort sen
         south.setBackground(Color.black); //ta bort sen
+        middle.setBackground(Color.orange); //ta bort sen
         frame.setVisible(true);
     }
 
@@ -45,5 +49,19 @@ public class ChatBox{
 
     public void showUserOnline(User[] users) {
         east.showUserOnline(users);
+    }
+
+    public Object getSelectedUser() {
+        User user = east.getSelectedUser();
+        return user;
+    }
+
+    public void addContactToList(User[] contacts) {
+        middle.addContactToList(contacts);
+    }
+
+    public User[] getContacts() {
+        User[] contacts = east.getListElements();
+        return contacts;
     }
 }

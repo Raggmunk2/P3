@@ -13,6 +13,7 @@ public class Controller implements Callback{
     private West west;
     private South south;
     private East east;
+    private Middle middle;
     private MessageManager messageManager;
     private LogInWindow logInWindow;
     private ArrayList<Message> messageArray;
@@ -20,7 +21,6 @@ public class Controller implements Callback{
     private Client client;
 
     public Controller(Buffer<Message> messageBuffer,MessageManager messageManager){
-        //this.logInWindow=logInWindow;
         this.messageBuffer=messageBuffer;
         this.messageManager=messageManager;
         this.client=new Client();
@@ -131,5 +131,20 @@ public class Controller implements Callback{
     @Override
     public void updateListView(User[] users) {
         chatBox.showUserOnline(users);
+    }
+
+    public void addToContact() {
+        User user = (User) chatBox.getSelectedUser();
+        User[] contacts = chatBox.getContacts();
+        User[] newContacts = new User[contacts.length + 1];
+
+        for(int i=0;i<contacts.length;i++){
+            newContacts[i] = contacts[i];
+        }
+        newContacts[newContacts.length-1] = user;
+        chatBox.addContactToList(newContacts);
+    }
+
+    public void showContacts() {
     }
 }

@@ -13,8 +13,9 @@ public class South extends JPanel implements ActionListener {
     private JTextField messageToWrite;
     private JButton sendButton;
     private Controller controller;
-    private Buffer<Message> messageBuffer;
-    private ChatBox chatBox;
+    private JButton addContacts;
+    private JButton showContacts;
+
     public South(Controller controller){
         this.controller=controller;
         setUp();
@@ -28,11 +29,22 @@ public class South extends JPanel implements ActionListener {
 
 
         sendButton = new JButton("Send");
+        sendButton.setBounds(10,10,100,20);
         sendButton.addActionListener(this);
 
-        add(sendButton,BorderLayout.EAST);
+        addContacts = new JButton("Add contacts");
+        addContacts.setBounds(15,15,100,20);
+        addContacts.addActionListener(this);
 
-        add(messageToWrite, BorderLayout.WEST);
+        showContacts = new JButton("Show contacts");
+        showContacts.setBounds(20,20,100,20);
+        showContacts.addActionListener(this);
+
+        add(showContacts);
+        add(addContacts);
+        add(sendButton);
+
+        add(messageToWrite);
 
     }
 
@@ -43,6 +55,12 @@ public class South extends JPanel implements ActionListener {
             if(messageText != null && !messageText.isEmpty()) {
                 controller.sendToServer(messageText);
             }
+        }
+        if(e.getSource()==addContacts){
+            controller.addToContact();
+        }
+        if(e.getSource()==showContacts){
+            controller.showContacts();
         }
     }
 
