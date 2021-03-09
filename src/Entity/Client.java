@@ -45,6 +45,11 @@ public class Client {
         callbacks.add(callback);
     }
 
+    public void close() {
+        Message closeMessage = new Message(new User("CLIENT",null),null,"closeConnection",null);
+        messageBuffer.put(closeMessage);
+    }
+
     private class Connection{
         private Sender sender;
         private Receiver receiver;
@@ -83,8 +88,10 @@ public class Client {
                     Message message = messageBuffer.get();
                     oos.writeObject(message);
                     oos.flush();
+                    if(message.getSender().getUsername().equals("CLIENT")){
+                        break;
+                    }
                 } catch (IOException | InterruptedException e) {
-                    //e.printStackTrace();
                     break;
                 }
 

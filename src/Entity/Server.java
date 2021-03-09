@@ -129,6 +129,9 @@ public class Server implements Runnable{
                 try {
                     System.out.println("waiting for messages");
                     Message message = (Message) ois.readObject();
+                    if(message.getSender().getUsername().equals("CLIENT")){
+                        break;
+                    }
                     System.out.println("message received");
                     if (message != null) {
                         messageManager.put(message);

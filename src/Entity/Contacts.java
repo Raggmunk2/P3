@@ -20,13 +20,12 @@ public class Contacts {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")); //"ISO-8859-1"));
             String[] parts;
             String username;
-            String password;
+            String profilePic;
             String str = br.readLine();
             while( str != null ) {
-                parts = str.split( "," );
-                username = parts[ 0 ];
-                password = parts[ 1 ];
-                userPass.put(parts[0],parts[1]); // (key=landets namn, value=Population-objekt) lagras i HashMappen
+                username = br.readLine();
+                profilePic = br.readLine();
+                userPass.put(username,profilePic); // (key=usernamn, value=profilePic) lagras i HashMappen
                 str = br.readLine();
             }
             br.close();

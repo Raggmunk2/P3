@@ -79,7 +79,7 @@ public class LogInWindow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==selectImage){
             System.out.println("Select image");
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
 
             int returnValue = jfc.showOpenDialog(null);
 

@@ -82,4 +82,8 @@ public class ChatBox{
         }
         return allReceivers;
     }
+
+    public void close() {
+        frame.setVisible(false);
+    }
 }
