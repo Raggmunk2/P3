@@ -38,7 +38,7 @@ public class Contacts {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
             String username= controller.getUsernameText();
-            String password = controller.getPasswordText();
+            String password = controller.getIpText();
             bw.write(username);
             bw.write(password);
             bw.flush();

@@ -48,7 +48,7 @@ public class User implements Serializable { // Även användas i strömmar
 
 
     public void readUserFromFile(){
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("files/Users.txt"),"UTF-8"))){
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/files/Users.txt"),"UTF-8"))){
             while (br.ready()){
                 username = br.readLine();
                 String image = br.readLine();
@@ -61,12 +61,13 @@ public class User implements Serializable { // Även användas i strömmar
         }
     }
 
-    public String getContactList() {
-        String contactInfo = null;
+    public ArrayList<User> getContactList() {
+        /*String contactInfo = null;
         for(User c : contacts){
             contactInfo += contacts.toString() + "\n";
         }
-        return contactInfo;
+        return contactInfo;*/
+        return contacts;
     }
 
     public void addUser(String username, ImageIcon imageIcon) {

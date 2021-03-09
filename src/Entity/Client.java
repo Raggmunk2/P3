@@ -29,8 +29,7 @@ public class Client {
     }
 
 
-    public void sendToServer(String messageText) {
-        Message message = new Message(user1,null,messageText,user1.getImage());
+    public void sendToServer(Message message) {
         messageBuffer.put(message);
     }
 

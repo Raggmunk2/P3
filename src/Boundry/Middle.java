@@ -5,6 +5,7 @@ import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class Middle extends JPanel {
     private Controller controller;
@@ -37,5 +38,9 @@ public class Middle extends JPanel {
     }
     public User[] getListElements() {
         return contactsList;
+    }
+
+    public List getSelectedElements() {
+        return  contacts.getSelectedValuesList();
     }
 }

@@ -24,6 +24,7 @@ public class Controller implements Callback{
     public Controller(Buffer<Message> messageBuffer,MessageManager messageManager){
         this.messageBuffer=messageBuffer;
         this.messageManager=messageManager;
+        this.logInWindow = new LogInWindow();
         this.client=new Client();
         client.addMessageListner(this);
     }
@@ -46,9 +47,9 @@ public class Controller implements Callback{
         String username =  logInWindow.getUsername();
         return username;
     }
-    public String getPasswordText(){
-        String password = logInWindow.getPassword();
-        return password;
+    public String getIpText(){
+        String ip = logInWindow.getIpText();
+        return ip;
     }
 
     public boolean checkFileType(File file){
@@ -104,7 +105,10 @@ public class Controller implements Callback{
     }
 
     public void sendToServer(String messageText) {
-        client.sendToServer(messageText);
+        User[] receivers = chatBox.getSelectedReceivers();
+        receivers[receivers.length-1] = user;
+        Message message = new Message(user,receivers,messageText,user.getImage());
+        client.sendToServer(message);
     }
 
     public Icon getProfilePic() {
@@ -145,7 +149,110 @@ public class Controller implements Callback{
         }
         newContacts[newContacts.length-1] = user;
         chatBox.addContactToList(newContacts);
+        String username = user.getUsername();
+        writeContactOnFile(username);
     }
+    private void writeContactOnFile(String username) {
+        ArrayList<User> contactlist = user.getContactList();
+        File file = new File ("src/files/"+username+"_Contacts.txt");
+        boolean fileExists = checkFileExist(file);
+        if(!fileExists) {
+            JOptionPane.showInternalMessageDialog(null,"You need to chose a path to save you contacts");
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(file), "UTF-8")) ) {
+                    for (User u : contactlist) {
+                        bw.write(String.valueOf(u));
+                        System.out.println(String.valueOf(u));
+                        bw.newLine();
+                        bw.flush();
+                    }
+                } catch(IOException e) {
+                    System.err.println(e);
+                }
+            }
+        }
+    }
+    /*den gamla
+    private void writeContactOnFile(User[] contacts) {
+        String username = user.getUsername();
+        boolean fileExists = checkFileExist(username);
+        if(fileExists) {
+            try {
+                OutputStreamWriter oos = new OutputStreamWriter(new FileOutputStream("src/files/"+username+"_Contacts.txt"), "UTF-8");
+                for (User u : contacts) {
+                    String readUsername = u.getUsername();
+                    ImageIcon image = u.getImage();
+                    oos.write(readUsername + ","+ image);
+                    oos.flush();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
+
+    private boolean checkFileExist(File file) {
+        if(file.exists()) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public void readContactsOnFile(String name,String image){
+        StringBuffer res = new StringBuffer();
+        String str;
+        int line = 0;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream("src/files/"+name+"_Contacts.txt"),"UTF-8"))) {
+            str = br.readLine();
+            System.out.println(str);
+            while ( str!=null ) {
+                //res.append(++line+". "+str+"\n");
+                str = br.readLine();
+                System.out.println(str);
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println(e);
+            //Om detta händer så ska systemet gå vidare till att skapa en fil med det namnet
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+    }
+    /*den gamla
+    public void readContactsOnFile(){
+        try{
+            String username = user.getUsername();
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream("files/"+username+"_Contacts.txt"));
+            String str = ois.readUTF();
+            while(str != null){
+                str.split(",");
+                String readUsername = ois.readUTF();
+                String image = ois.readUTF();
+                ImageIcon imageIcon = new ImageIcon(image);
+                System.out.println(readUsername + "\n" + imageIcon);
+
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
 
     public void logOut() {
         //spara all trafik

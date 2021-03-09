@@ -110,6 +110,7 @@ public class LogInWindow implements ActionListener {
                 System.out.println(String.format("User: %s, ip: %s, port: %s", user, ip, port));
                 controller.connect(user,imageIcon ,ip, port);
                 controller.addNewUser(user,imageIcon);
+                //controller.readContactsOnFile();
                 frame.setVisible(false);
             }
         }
@@ -119,9 +120,9 @@ public class LogInWindow implements ActionListener {
         String username =  userText.getText();
         return username;
     }
-    public String getPassword(){
-        String password = ipText.getText();
-        return password;
+    public String getIpText(){
+        String ip = ipText.getText();
+        return ip;
     }
 
     public void sendError(String message) {

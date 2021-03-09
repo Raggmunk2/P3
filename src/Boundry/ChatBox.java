@@ -7,6 +7,8 @@ import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -59,5 +61,25 @@ public class ChatBox{
     public User[] getContacts() {
         User[] contacts = middle.getListElements();
         return contacts;
+    }
+
+    public User[] getSelectedReceivers() {
+        List onlineReceivers = east.getSelectedElements();
+        List contactReceivers = middle.getSelectedElements();
+        ArrayList<User> receivers = new ArrayList<>();
+        for(Object o : onlineReceivers){
+            receivers.add((User)o);
+        }
+        for(Object o: contactReceivers){
+            User u = (User) o;
+            if(!receivers.contains(u)){
+                receivers.add(u);
+            }
+        }
+        User[] allReceivers = new User[receivers.size()+1]; //Lägg till mej själv på sista platsen
+        for(int i =0;i< receivers.size();i++){
+            allReceivers[i] = receivers.get(i);
+        }
+        return allReceivers;
     }
 }

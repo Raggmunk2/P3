@@ -5,6 +5,7 @@ import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class East extends JPanel {
     private Controller controller;
@@ -22,9 +23,6 @@ public class East extends JPanel {
         onlineList.setPreferredSize(new Dimension(250,425));// här visas alla som är online
         onlineList.setBackground(Color.LIGHT_GRAY);
         onlineList.setCellRenderer(new UserRenderer());
-        onlineList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-
-
 
         onlineText = new JLabel("Online now:");
         //Font font = new Font("Arial",Font.PLAIN,12);
@@ -45,4 +43,7 @@ public class East extends JPanel {
        return user;
     }
 
+    public List getSelectedElements() {
+        return onlineList.getSelectedValuesList();
+    }
 }

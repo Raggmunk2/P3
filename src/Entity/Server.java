@@ -38,7 +38,7 @@ public class Server implements Runnable{
                 users.add(newUser.getSender());
                 System.out.println("user added");
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                new Connection(ois,oos);
+                new Connection(ois,oos,newUser.getSender());
                 sendUsers(users);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -63,10 +63,10 @@ public class Server implements Runnable{
         private Receiver receiver;
         private Socket socket;
 
-        public Connection(ObjectInputStream ois, ObjectOutputStream oos){
+        public Connection(ObjectInputStream ois, ObjectOutputStream oos, User connectedUser){
             this.socket=socket;
             messageBuffer = new Buffer<>();
-            sender = new Sender(oos,messageBuffer);
+            sender = new Sender(oos,messageBuffer,connectedUser);
             receiver = new Receiver(ois,messageBuffer);
             sender.start();
             receiver.start();
@@ -76,10 +76,12 @@ public class Server implements Runnable{
     private class Sender extends Thread implements PropertyChangeListener {
         private ObjectOutputStream oos;
         private Buffer<Message> messageBuffer;
+        private User connectedUser;
 
-        public Sender(ObjectOutputStream oos,Buffer<Message> messageBuffer){
+        public Sender(ObjectOutputStream oos,Buffer<Message> messageBuffer, User connectedUser){
             this.oos = oos;
             this.messageBuffer=messageBuffer;
+            this.connectedUser=connectedUser;
             messageManager.addPropertyChangeListener(this);
 
         }//konstruktor
@@ -87,12 +89,15 @@ public class Server implements Runnable{
         public void run(){
             while(true) {
                 try {
-
-                    System.out.println("Är du ens här!");
                     Message message = messageBuffer.get();
-                    oos.writeObject(message);
-                    System.out.println("hej");
-                    oos.flush();
+                    for(User u: message.getRecipients()){
+                        if(u.getUsername().equals(connectedUser.getUsername())){
+                            oos.writeObject(message);
+                            oos.flush();
+                            break;
+                        }
+                    }
+
 
                 } catch (InterruptedException | IOException e) {
                     //e.printStackTrace();

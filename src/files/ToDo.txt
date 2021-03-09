@@ -1,0 +1,8 @@
+Hantera krasch när klienten kopplar ner - yay
+Lägga till kontakter - yay
+Spara kontakter
+Spara User i HashMap
+Spara UnSentMessages
+Tid för skickat/tagit emot
+Lagra meddelanen
+Logga trafik

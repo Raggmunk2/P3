@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gui">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/out/production/DA343A/Gui.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
