@@ -7,14 +7,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class South extends JPanel implements ActionListener {
+public class ButtonPanelSouth extends JPanel implements ActionListener {
     private JTextField messageToWrite;
     private JButton sendButton;
     private Controller controller;
     private JButton addContacts;
     private JButton logOut;
 
-    public South(Controller controller){
+    public ButtonPanelSouth(Controller controller){
         this.controller=controller;
         setUp();
 

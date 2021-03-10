@@ -7,13 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class Middle extends JPanel {
+public class ContactListCenter extends JPanel {
     private Controller controller;
     private JList contacts;
     private JLabel contactsText;
     private User[] contactsList = new User[0];
 
-    public Middle(Controller controller) {
+    public ContactListCenter(Controller controller) {
         this.controller=controller;
         setUp();
     }

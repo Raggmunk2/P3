@@ -5,18 +5,21 @@ import Entity.Message;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class West extends JPanel{
+public class TextBoxWest extends JPanel{
     private Controller controller;
     private JLabel label;
     private JList messageBox;
+    ArrayList<Message> infoString = new ArrayList<>();
 
 
-    public West(Controller controller) {
+    public TextBoxWest(Controller controller) {
         this.controller=controller;
         setUp();
-    }
 
+    }
+    //Metod som sätter upp GUI-komponenterna på vänstra sidan
     private void setUp() {
 
         messageBox = new JList();
@@ -32,7 +35,22 @@ public class West extends JPanel{
         this.add(scrollPane);
     }
 
+    //Metod som uppdaterar meddelandena på GUI
     public void updateListView(Message[] messages) {
         messageBox.setListData(messages);
+        updateTraficInfo(messages);
+    }
+
+    //Metod som uppdaterar trafik loggen med meddelanden
+    public void updateTraficInfo(Message[] messages) {
+        for(Message m : messages){
+            infoString.add(m);
+        }
+
+    }
+
+    //Metod som returnerar en ArrayList med Message till trafik loggen
+    public ArrayList<Message> getTraficInfo() {
+        return infoString;
     }
 }

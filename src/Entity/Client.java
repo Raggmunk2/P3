@@ -1,6 +1,9 @@
 package Entity;
 
 import Controller.Controller;
+import Entity.Callback;
+import Entity.Message;
+import Entity.User;
 
 
 import java.beans.PropertyChangeSupport;
@@ -18,48 +21,55 @@ public class Client {
     private String ip;
     private int port;
     private ArrayList<Message> messageRegistrator = new ArrayList<>();
-    private Buffer<Message> messageBuffer = new Buffer<>();
+    private Buffer<Message> messageBuffer = new Buffer<Message>();
     private Controller controller;
     private ArrayList<Callback> callbacks = new ArrayList<>();
     private User user1;
 
+    //Konstruktor som läggen en PropertyChangeSupport till klassen
     public Client(){
-        System.out.println("Client startad");
         changeSupport = new PropertyChangeSupport(this);
     }
 
 
+    //Metod som puttar ett Message till messageBuffern
     public void sendToServer(Message message) {
         messageBuffer.put(message);
     }
 
+    //Metod som "settar" Usern
     public void setUser(User user1) {
         this.user1=user1;
     }
 
+    //Metod som skapar en en instans av den inre klassen med ip och port
     public void connect(String ip, int port) {
         new Connection(ip,port);
     }
 
+    //Metod för att lägga på en callback på parametern
     public void addMessageListner(Callback callback) {
         callbacks.add(callback);
     }
 
+    //Metod för att skapa ett nytt meddelande som Servern-Receiver kollar "Proppertyn" på
+    //och puttar sedan det till messageBuffern
     public void close() {
-        Message closeMessage = new Message(new User("CLIENT",null),null,"closeConnection",null);
+        Message closeMessage = new Message(new User("CLIENT",null),null,"closeConnection",null,null,null);
         messageBuffer.put(closeMessage);
     }
 
+    //Inre klass
     private class Connection{
         private Sender sender;
         private Receiver receiver;
+
+        //Konstruktor som ansluter, skriver objekt, och s
         public Connection(String ip, int port){
             try {
                 Socket socket = new Socket(ip, port);
-                System.out.println("Connected");
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                Message userMessage = new Message(user1,null,null,user1.getImage());
-                System.out.println("Sending user");
+                Message userMessage = new Message(user1,null,null,null,null,user1.getImage());
                 oos.writeObject(userMessage);
                 oos.flush();
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
@@ -109,13 +119,13 @@ public class Client {
         public void run() {
             while (true) {
                 try {
-
                     Message message;
                     while (!Thread.interrupted()) {
                         //lagt till tid då meddelandet skickades
-                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-                        LocalDateTime timeSent = LocalDateTime.now();
                         message = (Message) ois.readObject();
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy MM dd HH mm ");
+                        LocalDateTime now = LocalDateTime.now();
+                        message.setTimeReceived(dtf.format(now));
                         if (message.getSender().getUsername().equals(user1.getUsername())) {
                             message.setUsername("You");
                         }

@@ -31,10 +31,12 @@ public class LogInWindow implements ActionListener {
         setUp();
     }
 
+    //Används i Controller-konsturktorn för att få en instans av denna klass
     public LogInWindow() {
-        //används
+
     }
 
+    //Metod som sätter upp framen och alla komponenter för LogIn fönstret
     public void setUp(){
         frame.setSize(350,200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,30 +77,31 @@ public class LogInWindow implements ActionListener {
         frame.setVisible(true);
     }
 
+    //ActionPreformed-metod för knapparna
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==selectImage){
-            System.out.println("Select image");
             JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
-
             int returnValue = jfc.showOpenDialog(null);
 
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 selectedFile = jfc.getSelectedFile();
+
+                //Här kollar vi om den valda filen är i rätt format
                 boolean fileCheck = controller.checkFileType(selectedFile);
+                //Om den är det så skapar vi en liten bild av den
                 if(fileCheck){
                     imageIcon = new ImageIcon(String.valueOf(selectedFile));
                     Image image = imageIcon.getImage();
                     Image newImage = image.getScaledInstance(25,25, Image.SCALE_SMOOTH);
                     imageIcon = new ImageIcon(newImage);
-                    String username = userText.getText();
-                    controller.addNewUser(username, imageIcon);
                 }else {
                     JOptionPane.showInternalMessageDialog(null,"You chose the wrong format!");
 
                 }
             }
         }
+
         if(e.getSource()== logInButton){
             if(selectedFile == null) {
                 sendError("You have to chose a profile picture!");
@@ -107,29 +110,27 @@ public class LogInWindow implements ActionListener {
                 String user = userText.getText();
                 String ip = ipText.getText();
                 int port = Integer.parseInt(portText.getText());
-                System.out.println(String.format("User: %s, ip: %s, port: %s", user, ip, port));
-                controller.connect(user,imageIcon ,ip, port);
-                controller.addNewUser(user,imageIcon);
-                //controller.readContactsOnFile();
+                //System.out.println(String.format("User: %s, ip: %s, port: %s", user, ip, port));
+                controller.connect(user,imageIcon ,ip, port); //Här connectar vi Usern med namn,bild,ip & port
+                controller.addNewUser(user,imageIcon); //Här lägger vi till användaren med namn och bild
                 frame.setVisible(false);
             }
         }
     }
 
+    //Metod som returnerar username
     public String getUsername() {
         String username =  userText.getText();
         return username;
     }
+    //Metod som returnerar ip
     public String getIpText(){
         String ip = ipText.getText();
         return ip;
     }
 
+    //Metod skickar ett felmeddelande
     public void sendError(String message) {
-        JOptionPane.showInternalMessageDialog(null,message);
-    }
-
-    public void sucess(String message) {
         JOptionPane.showInternalMessageDialog(null,message);
     }
 

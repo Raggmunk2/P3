@@ -7,13 +7,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Controller implements Callback{
-    private ChatBox chatBox;
+    private MainChatFrame mainChatFrame;
     private Server server;
     private Buffer<Message> messageBuffer;
-    private West west;
-    private South south;
-    private East east;
-    private Middle middle;
+    private TextBoxWest textBoxWest;
+    private ButtonPanelSouth buttonPanelSouth;
+    private OnlineUserEast onlineUserEast;
+    private ContactListCenter contactListCenter;
     private MessageManager messageManager;
     private LogInWindow logInWindow;
     private ArrayList<Message> messageArray;
@@ -21,6 +21,8 @@ public class Controller implements Callback{
     private Client client;
     private TraficLog traficLog;
 
+    //Konstruktor som instansierar meddagebuffer och messagemanager. Startar Client-tråden
+    //och sätter en PropertyChangeListener på klienten
     public Controller(Buffer<Message> messageBuffer,MessageManager messageManager){
         this.messageBuffer=messageBuffer;
         this.messageManager=messageManager;
@@ -28,30 +30,35 @@ public class Controller implements Callback{
         this.client=new Client();
         client.addMessageListner(this);
     }
-    public Controller(West west,East east, South south){
-        this.west=west;
-        this.east= east;
-        this.south=south;
+    public Controller(TextBoxWest textBoxWest,OnlineUserEast onlineUserEast, ButtonPanelSouth buttonPanelSouth){
+       this.textBoxWest=textBoxWest;
+       this.onlineUserEast=onlineUserEast;
+       this.buttonPanelSouth=buttonPanelSouth;
     }
 
+    //Denna konsturktor används i TraficLog-klassen för att skapa en instans av klassen.
     public Controller() {
-        //denna används
+
     }
 
+    //Metod som returnerar ett Message
     public Message getMessage() throws InterruptedException {
         Message message = messageBuffer.get();
         return message;
     }
 
+    //Metod som hämntar användarnamnet
     public String getUsernameText(){
         String username =  logInWindow.getUsername();
         return username;
     }
+    //Metod som hämtar ip
     public String getIpText(){
         String ip = logInWindow.getIpText();
         return ip;
     }
 
+    //Metod som kollar om den valda bild-filen är av rätt typ
     public boolean checkFileType(File file){
         boolean fileCheck = false;
 
@@ -74,12 +81,13 @@ public class Controller implements Callback{
         return fileCheck;
     }
 
+    //Metod som skapar och lägger till en ny användare.
     public void addNewUser(String username, ImageIcon imageIcon) {
         user = new User(username,imageIcon);
         user.addUser(username,imageIcon);
 
     }
-
+    //Metod som jämför om användarnamnet redan finns
     /*public void compare(String username) {
 
         try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("files/Users.txt"),"UTF-8"))){
@@ -104,36 +112,44 @@ public class Controller implements Callback{
 
     }*/
 
+    //Metod som hämtar vilka mottagarna för meddelandet är, skapar ett nytt meddelande
+    //och skickar vidare det till client-klassen
     public void sendToServer(String messageText) {
-        User[] receivers = chatBox.getSelectedReceivers();
+        User[] receivers = mainChatFrame.getSelectedReceivers();
         receivers[receivers.length-1] = user;
-        Message message = new Message(user,receivers,messageText,user.getImage());
+        Message message = new Message(user,receivers,messageText,null,null,user.getImage());
         client.sendToServer(message);
     }
 
+    //Metod som returnerar probilbilden
     public Icon getProfilePic() {
-        Icon profilePic = user.getImage();
+        ImageIcon profilePic = user.getImage();
         return profilePic;
     }
 
+    //Metod som returnerar text-meddelandet från ButtonPanelSouth
     public String getMessageText() {
-        String messageText = south.getText();
+        String messageText = buttonPanelSouth.getText();
         return messageText;
     }
 
+    //Metod som läser in sina redan tillagda kontakter och sedan ansluter till servern
     public void connect(String username, ImageIcon imageIcon, String ip, int port) {
-        chatBox = new ChatBox(this);
-        User user1 = new User(username,imageIcon);
+        mainChatFrame = new MainChatFrame(this);
+        user = new User(username,imageIcon);
         User[] contacts = readContactsFromFile();
-        chatBox.addContactToList(contacts);
-        client.setUser(user1);
-        client.connect(ip,port);
+        if(contacts != null) {
+            mainChatFrame.addContactToList(contacts);
+        }
+        client.setUser(user);
+        client.connect(ip,port); //Här skapas en ny Connection(Clients inre klass) till servern
     }
 
+    //Metod som läser in användarens kontakter från filen
     private User[] readContactsFromFile() {
-        ArrayList<User> contactList = new ArrayList<>();
+        ArrayList<User> contactList;
         try{
-            String filename = System.getProperty("user.dir") + "/" + user.getUsername() + "_Contacts.dat";
+            String filename = System.getProperty("user.dir") + "/P3/src/files/" + user.getUsername() + "_Contacts.dat";
             FileInputStream fis = new FileInputStream(filename);
             ObjectInputStream ois = new ObjectInputStream(fis);
             contactList = (ArrayList) ois.readObject();
@@ -154,50 +170,80 @@ public class Controller implements Callback{
         return null;
     }
 
+    //Metod som skickar vidare meddelandena till GUI
     @Override
     public void updateListView(Message[] messages) {
-        chatBox.updateListView(messages);
+        mainChatFrame.updateListView(messages);
     }
 
+    //Metod som skickar vidare de Users som är online till GUI
     @Override
     public void updateListView(User[] users) {
-        chatBox.showUserOnline(users);
+        mainChatFrame.showUserOnline(users);
     }
 
+    //Metod som lägger till en User till användarens kontaktlista m.h.a. en ny array
     public void addToContact() {
-        User user = (User) chatBox.getSelectedUser();
-        User[] contacts = chatBox.getContacts();
-        System.out.println(contacts.length);
+        User user = (User) mainChatFrame.getSelectedUser();
+        User[] contacts = mainChatFrame.getContacts();
         User[] newContacts = new User[contacts.length + 1];
 
         for(int i=0;i<contacts.length;i++){
             newContacts[i] = contacts[i];
         }
         newContacts[newContacts.length-1] = user;
-        chatBox.addContactToList(newContacts);
+        mainChatFrame.addContactToList(newContacts);
     }
 
-
+    //Metod som avslutar GUI:t och skapar en ny frame som visar teafik loggen
     public void logOut() {
         client.close();
         saveContacts();
-        chatBox.close();
-        //spara all trafik
-        //system exit
+        mainChatFrame.close();
         traficLog = new TraficLog();
-        String[] infoString;//vart hämtar jag infon?!
-        //traficLog.showTraficLog(infoString);
+        writeTraficLog();
+    }
+    public void writeTraficLog(){
+        String timeFrom = traficLog.getTimeFrom();
+        String timeTo = traficLog.getTimeTo();
+
+        ArrayList<Message> allMessages = new ArrayList<>();
+        ArrayList<Message> traficInfo = mainChatFrame.getTraficInfo();
+        for(Message m : traficInfo){
+            int sent = Integer.parseInt(String.valueOf(m.getTimeSent()));
+            int received = Integer.parseInt(String.valueOf(m.getTimeReceived()));
+            if(sent>=Integer.parseInt(timeFrom) && received<=Integer.parseInt(timeTo)){
+                allMessages.add(m);
+            }
+        }
+        try{
+            String filename = System.getProperty("user.dir") + "/files/traficLog/trafikLog.dat";
+            FileOutputStream fos = new FileOutputStream(filename);
+            ObjectOutputStream oos =  new ObjectOutputStream(fos);
+            oos.writeObject(allMessages);
+            oos.flush();
+            oos.close();
+            fos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Det gick inte");
+            e.printStackTrace();
+        }
+        traficLog.showTraficLog(allMessages);
     }
 
+    //Metod som sparar alla kontakter man lagt till och skriver dem på fil
     private void saveContacts() {
         ArrayList<User> contactList = new ArrayList<>();
-        User[] contacts = chatBox.getContacts();
+        User[] contacts = mainChatFrame.getContacts();
         for(User u : contacts){
             contactList.add(u);
         }
         try{
-            String filename = System.getProperty("user.dir") + "/" + user.getUsername() + "_Contacts.dat";
-            FileOutputStream fos = new FileOutputStream(filename);
+            String filename = System.getProperty("user.dir") + "/P3/src/files/" + user.getUsername() + "_Contacts.dat";
+            FileOutputStream fos = new FileOutputStream(filename); //här är det nått som händer
             ObjectOutputStream oos =  new ObjectOutputStream(fos);
             oos.writeObject(contactList);
             oos.flush();
@@ -209,5 +255,27 @@ public class Controller implements Callback{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //Metod som returnerar alla meddelandena som en ArrayList med Messages
+    public ArrayList<Message> getTraficLog() {
+        ArrayList<Message> allMessages;
+        try{
+            String filename = System.getProperty("user.dir") + "/P3/src/files/traficLog.dat";
+            FileInputStream fis = new FileInputStream(filename);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            allMessages = (ArrayList) ois.readObject();
+            ois.close();
+            fis.close();
+            return allMessages;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }

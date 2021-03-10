@@ -16,7 +16,6 @@ public class User implements Serializable { // Även användas i strömmar
         this.image=image;
     }
 
-
     public int hashCode() {
         return username.hashCode();
     }
@@ -47,49 +46,9 @@ public class User implements Serializable { // Även användas i strömmar
     }
 
 
-    public void readUserFromFile(){
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/files/Users.txt"),"UTF-8"))){
-            while (br.ready()){
-                username = br.readLine();
-                String image = br.readLine();
-                ImageIcon imageIcon = new ImageIcon(String.valueOf(image));
-                System.out.println(username + "\n" + image);
-                users.put(username, imageIcon);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ArrayList<User> getContactList() {
-        /*String contactInfo = null;
-        for(User c : contacts){
-            contactInfo += contacts.toString() + "\n";
-        }
-        return contactInfo;*/
-        return contacts;
-    }
-
     public void addUser(String username, ImageIcon imageIcon) {
         users.put(username,imageIcon);
     }
-    public void addContactToFile(User newContact){
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("files/Users.txt"), "UTF-8"));
-            String str = br.readLine();
-            while(str != null){
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("files/Contacts.txt"),"UTF-8"));
-                bw.write(String.valueOf(newContact));
-                contacts.add(newContact);
-                br.readLine();
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }

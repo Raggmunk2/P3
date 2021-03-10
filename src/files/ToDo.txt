@@ -1,8 +1,8 @@
-Hantera krasch när klienten kopplar ner - yay
-Lägga till kontakter - yay
-Spara kontakter
-Spara User i HashMap
-Spara UnSentMessages
-Tid för skickat/tagit emot
-Lagra meddelanen
-Logga trafik
+Refactor förslag:
+ChatBox - MainChatFrame
+East - OnlineUsersEast
+South - ButtonPanelSouth
+West - TextBoxWest
+Middle - ContactListCenter
+
+

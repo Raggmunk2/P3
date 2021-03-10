@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class Contacts {
     private Controller controller;
-    private HashMap<User,Client> clients = new HashMap<>();
+    private HashMap<User, Client> clients = new HashMap<>();
     private HashMap<String,String> userPass = new HashMap<>();
     // egna tillägg
     /*public synchronized put(User user,Client client) {

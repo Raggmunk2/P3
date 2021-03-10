@@ -4,7 +4,7 @@ import Entity.User;
 
 import javax.swing.*;
 import java.awt.*;
-
+//Denna klassen bestämmer hur User-objekten i listan ska visas
 public class UserRenderer extends JLabel implements ListCellRenderer<User> {
 
     public UserRenderer(){
